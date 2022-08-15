@@ -1,0 +1,7 @@
+__pycache__/
+.env
+venv_isbn/
+config.py
+book.db
+last_run.tmp
+tuotedump2.csv
