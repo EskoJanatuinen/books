@@ -15,3 +15,4 @@ Allows scanning even if the database cannot be updated.
 </br>
 </br>
 
+<img width="238" alt="Screenshot 2022-08-15 at 16 40 56" src="https://user-images.githubusercontent.com/47399693/184647390-03c4129a-e5d3-43b9-9cbf-457fbc02f5b9.png">
