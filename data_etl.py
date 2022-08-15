@@ -152,14 +152,6 @@ def iterate_data():
     df.fillna("empty", inplace=True)  # Remove NaN values from the other columns
 
     for index_label, row_series in df.iterrows():
-        # For each row update the 'Bonus' value to it's double
-        # df.at[index_label, "vapaasaldo"] = row_series["vapaasaldo"] * 1
-
-        """
-        df.at[index_label, "kuvaus"] = isbnlib.get_isbnlike(
-            row_series["kuvaus"], level="normal"
-        )
-        """
         isbn = isbnlib.get_isbnlike(row_series["kuvaus"], level="normal")
         isbn13 = ""
         if len(isbn) > 0:
