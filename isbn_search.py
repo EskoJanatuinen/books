@@ -64,7 +64,7 @@ def scanning():
             (isbn13,),
         )
         result_sales_history = cur.fetchall()
-        # fetchall returns a list containing tuples
+        # fetchall() returns a list containing tuples
         # For example [(10.0, 1), (8.0, 2), (6.0, 5)]
         # First value of a tuple is price and second value is number of sales
 
