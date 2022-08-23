@@ -8,7 +8,7 @@ import pandas as pd
 
 
 def print_yellow_background(string):
-    """Prints string with yellows background"""
+    """Prints string with a yellow background"""
     bg_yellow = "\033[1;30;43m"
     bg_reset = " \033[0;0m"
     print("\n" + bg_yellow + string + bg_reset)
