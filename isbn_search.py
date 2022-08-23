@@ -15,7 +15,7 @@ def print_yellow_background(string):
 
 
 def scanning():
-    """returns inventory balance and saleshistory for given ISBN"""
+    """returns inventory balance and sales history for given ISBN"""
     con = sqlite3.connect("book.db")
     cur = con.cursor()
 
