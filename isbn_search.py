@@ -24,6 +24,7 @@ def scanning():
         if input_isbn == "":
             print("\n  Quitting\n")
             break
+
         # Validation
         isbn13 = isbnlib.to_isbn13(input_isbn)  # Convert to isbn13 if isbn10
         if not isbnlib.is_isbn13(isbn13):
@@ -37,7 +38,7 @@ def scanning():
             (isbn13,),
         )
         result_inventory_balance = cur.fetchall()
-        # fetchall() returns a tuple inside a list, for example [(3,)]
+        # fetchall() returns a list containing a tuple, for example [(3,)]
 
         # First copy of the book -> needs a product photo
         if len(result_inventory_balance) == 0:
@@ -63,9 +64,9 @@ def scanning():
             (isbn13,),
         )
         result_sales_history = cur.fetchall()
-        # fetchall returns a tuple inside a list
+        # fetchall returns a list containing tuples
         # For example [(10.0, 1), (8.0, 2), (6.0, 5)]
-        # First value of  tuple is price and second value is number of sales
+        # First value of a tuple is price and second value is number of sales
 
         # Format sales history for printing
         df = pd.DataFrame()
