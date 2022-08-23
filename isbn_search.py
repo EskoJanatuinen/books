@@ -7,7 +7,15 @@ import pandas as pd
 # os.system("color")
 
 
+def print_yellow_background(string):
+    """Prints string with yellows background"""
+    bg_yellow = "\033[1;30;43m"
+    bg_reset = " \033[0;0m"
+    print("\n" + bg_yellow + string + bg_reset)
+
+
 def scanning():
+    """returns inventory balance and saleshistory for given ISBN"""
     con = sqlite3.connect("book.db")
     cur = con.cursor()
 
@@ -21,45 +29,48 @@ def scanning():
         if not isbnlib.is_isbn13(isbn13):
             print("\n  Ei ole ISBN")
             continue
-        # Query
+
+        # INVENTORY BALANCE:
+        # SQL query returns inventory balance for the book
         cur.execute(
             "SELECT SUM(vapaasaldo) FROM data WHERE kuvaus=? GROUP BY kuvaus",
             (isbn13,),
         )
-        result = cur.fetchall()
-        # First copy of the book -> needs a product photo
-        if len(result) == 0:
-            print("\n" + "\033[1;30;43m" + " -> KUVATTAVAKSI " + " \033[0;0m")
-        # Product photo exists
-        else:
-            # Inventory balance 0-2 -> online store
-            if result[0][0] < 3:
-                print(
-                    "\n"
-                    + "\033[1;30;43m"
-                    + " -> TUOTESYÖTTÖÖN, Saldo = "
-                    + str(result[0][0])
-                    + " \033[0;0m"
-                )
-            # Inventory balance > 2 -> physical store
-            else:
-                print(
-                    "\n"
-                    + "\033[1;30;43m"
-                    + " -> MYYMÄLÄÄN, Saldo = "
-                    + str(result[0][0])
-                    + " \033[0;0m"
-                )
+        result_inventory_balance = cur.fetchall()
+        # fetchall() returns a tuple inside a list, for example [(3,)]
 
+        # First copy of the book -> needs a product photo
+        if len(result_inventory_balance) == 0:
+            print_yellow_background(" -> KUVATTAVAKSI ")
+            continue
+
+        # Product photo exists:
+        inventory_balance = result_inventory_balance[0][0]
+        # Inventory balance 0-2 -> online store
+        if inventory_balance < 3:
+            print_yellow_background(
+                " -> TUOTESYÖTTÖÖN, Saldo = " + str(inventory_balance)
+            )
+
+        # Inventory balance > 2 -> physical store
+        else:
+            print_yellow_background(" -> MYYMÄLÄÄN, Saldo = " + str(inventory_balance))
+
+        # SALES HISTORY:
+        # SQL query returns sales history for the book grouped by sales prices
         cur.execute(
             "SELECT hinta, SUM(myyty) FROM data WHERE kuvaus=? GROUP BY hinta ORDER BY hinta DESC",
             (isbn13,),
         )
-        res = cur.fetchall()
+        result_sales_history = cur.fetchall()
+        # fetchall returns a tuple insed a list.
+        # For example [(10.0, 1), (8.0, 2), (6.0, 5)].
+        # First value of  tuple is price and second value is number of sales.
 
+        # Format sales history for printing
         df = pd.DataFrame()
-        for row in res:
-            dict = {"hinta": row[0], "myyty": row[1]}
+        for value in result_sales_history:
+            dict = {"hinta": value[0], "myyty": value[1]}
             df = df.append(dict, ignore_index=True)
             df["myyty"] = df["myyty"].astype(int)
         if len(df) > 0:
